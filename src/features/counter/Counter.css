@@ -1,0 +1,45 @@
+.container {
+  width: 30%;
+  margin: auto;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0px 0px 20px 0px #54545424;
+  padding: 0px 12px 12px 12px;
+}
+
+.headLine_tag {
+  margin-top: 0px;
+  padding-top: 4px;
+  text-align: center;
+}
+
+.donught_container {
+  position: relative;
+}
+
+.labels_container {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.label {
+  width: 33%;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.bold_pr {
+  margin-left: 6px;
+}

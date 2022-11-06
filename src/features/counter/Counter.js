@@ -1,66 +1,96 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  decrement,
-  increment,
-  incrementByAmount,
-  incrementAsync,
-  incrementIfOdd,
-  selectCount,
-} from './counterSlice';
-import styles from './Counter.module.css';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { counterState, getUserAsync } from "./counterSlice";
+import styles from "./Counter.module.css";
+import "./Counter.css";
+
+import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip);
 
 export function Counter() {
-  const count = useSelector(selectCount);
   const dispatch = useDispatch();
-  const [incrementAmount, setIncrementAmount] = useState('2');
 
-  const incrementValue = Number(incrementAmount) || 0;
+  const { messages } = useSelector(counterState);
+
+  let totalMessage = messages.length;
+
+  const labels = [...new Set(messages.map((message) => message.source))];
+  const data = [];
+
+  for (let label = 0; label < labels.length; label++) {
+    const source = labels[label];
+    data.push(messages.filter((message) => message.source === source).length);
+  }
+
+  var coloR = [];
+  var dynamicColors = function () {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+  };
+  for (var i in labels) {
+    coloR.push(dynamicColors());
+  }
+
+  let dummyMessage = {
+    labels: labels,
+
+    datasets: [
+      {
+        label: "# of Votes",
+        data: data,
+        backgroundColor: coloR,
+        borderColor: "rgb(0,0,0,0.5)",
+      },
+    ],
+  };
+  let options = {
+    legend: {
+      display: false,
+    },
+  };
+
+  useEffect(() => {
+    dispatch(getUserAsync({}));
+  }, [dispatch]);
 
   return (
-    <div>
-      <div className={styles.row}>
-        <button
-          className={styles.button}
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
+    <div className="container">
+      <h2 className="headLine_tag"> Message Count By Source</h2>
+      <hr />
+      <div className="donught_container">
+        <Doughnut data={dummyMessage} options={options} />
+        <div
+          style={{
+            position: "absolute",
+            width: "100%",
+            top: "50%",
+            left: 0,
+            textAlign: "center",
+            marginTop: "-10%",
+            lineHeight: "20px",
+          }}
         >
-          -
-        </button>
-        <span className={styles.value}>{count}</span>
-        <button
-          className={styles.button}
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
+          <h4>{totalMessage.toLocaleString("en-US")}</h4>
+          <span>Total Messages</span>
+        </div>
       </div>
-      <div className={styles.row}>
-        <input
-          className={styles.textbox}
-          aria-label="Set increment amount"
-          value={incrementAmount}
-          onChange={(e) => setIncrementAmount(e.target.value)}
-        />
-        <button
-          className={styles.button}
-          onClick={() => dispatch(incrementByAmount(incrementValue))}
-        >
-          Add Amount
-        </button>
-        <button
-          className={styles.asyncButton}
-          onClick={() => dispatch(incrementAsync(incrementValue))}
-        >
-          Add Async
-        </button>
-        <button
-          className={styles.button}
-          onClick={() => dispatch(incrementIfOdd(incrementValue))}
-        >
-          Add If Odd
-        </button>
+      <div className="labels_container">
+        {labels.map((label, index) => {
+          return (
+            <div className="label" key={index}>
+              <div className="dot" style={{ background: coloR[index] }}></div>
+              {label}{" "}
+              <b className="bold_pr">
+                {Math.round((data[index] / totalMessage) * 100)}
+              </b>
+              &#37;
+            </div>
+          );
+        })}
       </div>
     </div>
   );
