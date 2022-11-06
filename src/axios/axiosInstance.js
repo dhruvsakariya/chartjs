@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let baseURL = "https://merntaskserve.herokuapp.com/"; // Todo chage
+let baseURL = "https://chartjs-serverjs.herokuapp.com/"; // Todo chage
 
 if (window.location.hostname === "localhost") {
   baseURL = "http://localhost:4000/";
