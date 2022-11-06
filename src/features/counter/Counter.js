@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { counterState, getUserAsync } from "./counterSlice";
-import styles from "./Counter.module.css";
+// import styles from "./Counter.module.css";
 import "./Counter.css";
 
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
@@ -31,7 +31,8 @@ export function Counter() {
     var b = Math.floor(Math.random() * 255);
     return "rgb(" + r + "," + g + "," + b + ")";
   };
-  for (var i in labels) {
+
+  for (let index = 0; index < labels.length; index++) {
     coloR.push(dynamicColors());
   }
 
